@@ -1,12 +1,71 @@
-/* Add your CSS styles here */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        body {
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        /* Calculator Card */
+        .card {
+            border-radius: 20px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .card-header {
+            background: #007bff !important;
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .card-header h2 {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        button {
+            font-size: 1.5rem;
+            font-weight: 500;
+            border-radius: 12px important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(76, 226, 252, 0.823);
+        }
+
+        .btn-light {
+            background-color: #f8f9fa;
+        }
+
+        .btn-warning {
+            background-color: #ffb84d;
+            color: rgb(255, 255, 255);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-secondary {
+            background-color: #2999fb;
+            color: white;
+        }
+
+        /* Display */
+        #display {
+            background-color: #f3f4f6;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            color: #033ce4;
+            font-weight: 600;
+        }
