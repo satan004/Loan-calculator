@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Scientific Calculator - Math Tools{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="calculator-card">
+                <div class="text-center mb-4">
+                    <div class="calculator-icon text-info mb-3">
+                        <i class="bi bi-flask"></i>
+                    </div>
+                    <h2 class="calculator-title">Scientific Calculator</h2>
+                    <p class="calculator-description">Advanced mathematical functions</p>
+                </div>
+
+                <div class="calculator-body">
+                    <div class="mb-3">
+                        <input type="number" class="form-control form-control-lg" id="value" placeholder="Enter value" step="any">
+                    </div>
+                    <div class="mb-3" id="powerInput" style="display: none;">
+                        <input type="number" class="form-control form-control-lg" id="power" placeholder="Enter power" step="any">
+                    </div>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('sin')">sin</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('cos')">cos</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('tan')">tan</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('sqrt')">√</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('log')">log</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('ln')">ln</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('exp')">e^x</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button class="btn btn-outline-info w-100" onclick="showPowerInput()">x^y</button>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" id="result" style="display: none;">
+                        <strong>Result:</strong> <span id="resultValue"></span>
+                    </div>
+                    <div class="alert alert-danger" id="error" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showPowerInput() {
+    document.getElementById('powerInput').style.display = 'block';
+    setTimeout(() => calculateScientific('power'), 100);
+}
+
+async function calculateScientific(operation) {
+    const value = document.getElementById('value').value;
+    const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+    const resultValue = document.getElementById('resultValue');
+
+    errorDiv.style.display = 'none';
+    resultDiv.style.display = 'none';
+
+    if (!value) {
+        errorDiv.textContent = 'Please enter a value';
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    const requestData = {
+        value: parseFloat(value),
+        operation: operation
+    };
+
+    if (operation === 'power') {
+        const power = document.getElementById('power').value;
+        if (!power) {
+            errorDiv.textContent = 'Please enter a power value';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        requestData.power = parseFloat(power);
+    }
+
+    try {
+        const response = await fetch('/api/calculate/scientific', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            resultValue.textContent = data.result;
+            resultDiv.style.display = 'block';
+        } else {
+            errorDiv.textContent = data.error;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

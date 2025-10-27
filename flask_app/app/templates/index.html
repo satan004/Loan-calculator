@@ -1,98 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylish Calculator</title>
+{% block title %}Math Tools - Home{% endblock %}
 
-    <!-- Bootstrap CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-3 fw-bold">
+            <span class="text-muted">MATH</span> 
+            <span class="text-success">TOOLS</span>
+        </h1>
+        <p class="lead text-muted">Your comprehensive suite of mathematical calculators</p>
+    </div>
 
-<body>
-
-    <div class="row justify-content-center w-100">
+    <div class="row g-4">
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow-lg">
-                <div class="card-header text-white text-center">
-                    <h2 class="mb-0">Calculator</h2>
+            <a href="/basic-calculator" class="text-decoration-none">
+                <div class="calculator-card">
+                    <div class="calculator-icon text-primary">
+                        <i class="bi bi-calculator-fill"></i>
+                    </div>
+                    <h3 class="calculator-title">Basic Calculator</h3>
+                    <p class="calculator-description">
+                        Perform quick and simple arithmetic operations like addition, subtraction, multiplication, and division with ease.
+                    </p>
                 </div>
-                <div class="card-body">
-                    <!-- Display -->
-                    <div class="mb-3">
-                        <input type="text" id="display" class="form-control form-control-lg text-end" readonly value="0"
-                            style="font-size: 2rem; height: 60px;">
-                    </div>
+            </a>
+        </div>
 
-                    <!-- Calculator Buttons -->
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <button class="btn btn-secondary w-100 py-3" onclick="clearDisplay()">C</button>
-                        </div>
-                        <div class="col-3">
-                            <button class="btn btn-secondary w-100 py-3" onclick="appendToDisplay('(')">(</button>
-                        </div>
-                        <div class="col-3">
-                            <button class="btn btn-secondary w-100 py-3" onclick="appendToDisplay(')')">)</button>
-                        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/scientific-calculator" class="text-decoration-none">
+                <div class="calculator-card">
+                    <div class="calculator-icon text-info">
+                        <i class="bi bi-flask"></i>
                     </div>
-
-                    <div class="row g-2 mt-2">
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('7')">7</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('8')">8</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('9')">9</button></div>
-                        <div class="col-3"><button class="btn btn-warning w-100 py-3"
-                                onclick="appendToDisplay('/')">÷</button></div>
-                    </div>
-
-                    <div class="row g-2 mt-2">
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('4')">4</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('5')">5</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('6')">6</button></div>
-                        <div class="col-3"><button class="btn btn-warning w-100 py-3"
-                                onclick="appendToDisplay('*')">×</button></div>
-                    </div>
-
-                    <div class="row g-2 mt-2">
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('1')">1</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('2')">2</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('3')">3</button></div>
-                        <div class="col-3"><button class="btn btn-warning w-100 py-3"
-                                onclick="appendToDisplay('-')">-</button></div>
-                    </div>
-
-                    <div class="row g-2 mt-2">
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('0')">0</button></div>
-                        <div class="col-3"><button class="btn btn-light border w-100 py-3"
-                                onclick="appendToDisplay('.')">.</button></div>
-                        <div class="col-3"><button class="btn btn-success w-100 py-3" onclick="calculate()">=</button>
-                        </div>
-                        <div class="col-3"><button class="btn btn-warning w-100 py-3"
-                                onclick="appendToDisplay('+')">+</button></div>
-                    </div>
-
-                    <div class="row g-2 mt-3">
-                        <div class="col-12">
-                            <button class="btn btn-danger w-100 py-3" onclick="clearDisplay()">Clear All</button>
-                        </div>
-                    </div>
+                    <h3 class="calculator-title">Scientific Calculator</h3>
+                    <p class="calculator-description">
+                        Access essential scientific functions including trigonometry, exponents, roots, and more for academic and professional use.
+                    </p>
                 </div>
-            </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <a href="/loan-calculator" class="text-decoration-none">
+                <div class="calculator-card">
+                    <div class="calculator-icon text-success">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h3 class="calculator-title">Loan Calculator</h3>
+                    <p class="calculator-description">
+                        Estimate monthly payments, total interest, and repayment schedules for personal or business loans.
+                    </p>
+                </div>
+            </a>
         </div>
     </div>
-</body>
-</html>
-
-<script src="../static/js/script.js"></script>
+</div>
+{% endblock %}

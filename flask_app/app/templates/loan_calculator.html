@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Loan Calculator - Math Tools{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="calculator-card">
+                <div class="text-center mb-4">
+                    <div class="calculator-icon text-success mb-3">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h2 class="calculator-title">Loan Calculator</h2>
+                    <p class="calculator-description">Calculate your loan payments and interest</p>
+                </div>
+
+                <div class="calculator-body">
+                    <div class="mb-3">
+                        <label for="principal" class="form-label">Loan Amount ($)</label>
+                        <input type="number" class="form-control form-control-lg" id="principal" placeholder="Enter loan amount" step="0.01" min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="annual_rate" class="form-label">Annual Interest Rate (%)</label>
+                        <input type="number" class="form-control form-control-lg" id="annual_rate" placeholder="Enter interest rate" step="0.01" min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="years" class="form-label">Loan Term (Years)</label>
+                        <input type="number" class="form-control form-control-lg" id="years" placeholder="Enter loan term" step="0.5" min="0">
+                    </div>
+                    
+                    <button class="btn btn-success btn-lg w-100 mb-3" onclick="calculateLoan()">
+                        <i class="bi bi-calculator"></i> Calculate Loan
+                    </button>
+
+                    <div id="results" style="display: none;">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="result-card bg-primary">
+                                    <div class="result-label">Monthly Payment</div>
+                                    <div class="result-value" id="monthlyPayment">$0.00</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-card bg-success">
+                                    <div class="result-label">Total Payment</div>
+                                    <div class="result-value" id="totalPayment">$0.00</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-card bg-warning">
+                                    <div class="result-label">Total Interest</div>
+                                    <div class="result-value" id="totalInterest">$0.00</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-card bg-info">
+                                    <div class="result-label">Principal Amount</div>
+                                    <div class="result-value" id="principalAmount">$0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger mt-3" id="error" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function calculateLoan() {
+    const principal = document.getElementById('principal').value;
+    const annual_rate = document.getElementById('annual_rate').value;
+    const years = document.getElementById('years').value;
+    const resultsDiv = document.getElementById('results');
+    const errorDiv = document.getElementById('error');
+
+    errorDiv.style.display = 'none';
+    resultsDiv.style.display = 'none';
+
+    if (!principal || !annual_rate || !years) {
+        errorDiv.textContent = 'Please fill in all fields';
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/calculate/loan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                principal: parseFloat(principal),
+                annual_rate: parseFloat(annual_rate),
+                years: parseFloat(years)
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('monthlyPayment').textContent = '$' + data.monthly_payment.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalPayment').textContent = '$' + data.total_payment.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalInterest').textContent = '$' + data.total_interest.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('principalAmount').textContent = '$' + data.principal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            resultsDiv.style.display = 'block';
+        } else {
+            errorDiv.textContent = data.error;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

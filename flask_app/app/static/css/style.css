@@ -1,71 +1,256 @@
-        body {
-            background: linear-gradient(135deg, #74ABE2, #5563DE);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Poppins', sans-serif;
-        }
+/* body {
+    background: linear-gradient(135deg, #74ABE2, #5563DE);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
 
-        /* Calculator Card */
-        .card {
-            border-radius: 20px;
-            overflow: hidden;
-            background: #ffffff;
-        }
+/
+.card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #ffffff;
+}
 
-        .card-header {
-            background: #007bff !important;
-            border-bottom: none;
-            border-radius: 20px 20px 0 0;
-        }
+.card-header {
+    background: #007bff !important;
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+}
 
-        .card-header h2 {
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
+.card-header h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
 
-        /* Buttons */
-        button {
-            font-size: 1.5rem;
-            font-weight: 500;
-            border-radius: 12px important;
-            transition: all 0.2s ease-in-out;
-        }
 
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(76, 226, 252, 0.823);
-        }
+button {
+    font-size: 1.5rem;
+    font-weight: 500;
+    border-radius: 12px important;
+    transition: all 0.2s ease-in-out;
+}
 
-        .btn-light {
-            background-color: #f8f9fa;
-        }
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(76, 226, 252, 0.823);
+}
 
-        .btn-warning {
-            background-color: #ffb84d;
-            color: rgb(255, 255, 255);
-        }
+.btn-light {
+    background-color: #f8f9fa;
+}
 
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
+.btn-warning {
+    background-color: #ffb84d;
+    color: rgb(255, 255, 255);
+}
 
-        .btn-danger {
-            background-color: #dc3545;
-        }
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
 
-        .btn-secondary {
-            background-color: #2999fb;
-            color: white;
-        }
+.btn-danger {
+    background-color: #dc3545;
+}
 
-        /* Display */
-        #display {
-            background-color: #f3f4f6;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            color: #033ce4;
-            font-weight: 600;
-        }
+.btn-secondary {
+    background-color: #2999fb;
+    color: white;
+}
+
+
+#display {
+    background-color: #f3f4f6;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    color: #033ce4;
+    font-weight: 600;
+} */
+
+:root {
+  --primary-color: #0d6efd;
+  --success-color: #198754;
+  --info-color: #0dcaf0;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-gray: #f8f9fa;
+  --medium-gray: #6c757d;
+  --dark-gray: #212529;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+}
+
+.sidebar-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--medium-gray);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.sidebar-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--primary-color);
+}
+
+.sidebar-icon.active {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.main-content {
+  margin-right: 100px;
+}
+
+.calculator-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.calculator-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.calculator-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.calculator-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin-bottom: 1rem;
+}
+
+.calculator-description {
+  color: var(--medium-gray);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.calculator-body {
+  margin-top: 2rem;
+}
+
+.result-card {
+  padding: 1.5rem;
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+}
+
+.result-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.result-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 10px;
+}
+
+.form-control-lg {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: auto;
+    transform: none;
+    flex-direction: row;
+    justify-content: center;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-content {
+    margin-right: 0;
+    margin-bottom: 80px;
+  }
+
+  .calculator-card {
+    padding: 1.5rem;
+  }
+
+  .calculator-icon {
+    font-size: 3rem;
+  }
+
+  .calculator-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Alert Animations */
+.alert {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
