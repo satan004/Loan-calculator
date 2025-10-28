@@ -1,125 +1,180 @@
 {% extends "base.html" %}
 
-{% block title %}Scientific Calculator - Math Tools{% endblock %}
+{% block title %}Scientific Calculator{% endblock %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="calculator-card">
-                <div class="text-center mb-4">
-                    <div class="calculator-icon text-info mb-3">
-                        <i class="bi bi-flask"></i>
-                    </div>
-                    <h2 class="calculator-title">Scientific Calculator</h2>
-                    <p class="calculator-description">Advanced mathematical functions</p>
-                </div>
+<div class="calculator1" style="color:#fff; max-width:650px; margin:32px auto; padding:22px; border-radius:12px;">
+    <input type="text" id="display" class="calculator-display1" readonly value="0" style="background:#d8d8d8; color:#212121; border:none; height:64px; font-size:1.4rem;" aria-live="polite">
 
-                <div class="calculator-body">
-                    <div class="mb-3">
-                        <input type="number" class="form-control form-control-lg" id="value" placeholder="Enter value" step="any">
-                    </div>
-                    <div class="mb-3" id="powerInput" style="display: none;">
-                        <input type="number" class="form-control form-control-lg" id="power" placeholder="Enter power" step="any">
-                    </div>
-                    
-                    <div class="row g-2 mb-3">
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('sin')">sin</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('cos')">cos</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('tan')">tan</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('sqrt')">√</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('log')">log</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('ln')">ln</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="calculateScientific('exp')">e^x</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <button class="btn btn-outline-info w-100" onclick="showPowerInput()">x^y</button>
-                        </div>
-                    </div>
+    <div style="display:flex; gap:12px; margin:12px 0; align-items:center;">
+        <button class="calculator-button" style="width:65px;"id="angleToggle" onclick="toggleAngleMode()">Deg</button>
+        <button class="calculator-button" style="width:65px;"onclick="toggleAns()">Ans</button>
+        <button class="calculator-button" style="width:65px;"onclick="clearDisplay()">AC</button>
+        <button class="calculator-button" style="width:65px;" onclick="backspace()">⌫</button>
+        <div style="flex:1"></div>
+        <button class="calculator-button equals" style="width:142px;" onclick="calculate()">=</button>
+    </div>
 
-                    <div class="alert alert-info" id="result" style="display: none;">
-                        <strong>Result:</strong> <span id="resultValue"></span>
-                    </div>
-                    <div class="alert alert-danger" id="error" style="display: none;"></div>
-                </div>
-            </div>
-        </div>
+    <div class="calculator-buttons" style="grid-template-columns: repeat(8, 1fr); gap:12px;">
+        <!-- Row: parentheses, comma, constants, 7,8,9, divide -->
+        <button class="calculator-button" onclick="appendToDisplay('(')">(</button>
+        <button class="calculator-button" onclick="appendToDisplay(')')">)</button>
+        <button class="calculator-button" onclick="appendToDisplay(',')"> , </button>
+        <button class="calculator-button" onclick="insertConstant('e')">e</button>
+        <button class="calculator-button" onclick="appendToDisplay('1')">1</button>
+        <button class="calculator-button" onclick="appendToDisplay('2')">2</button>
+        <button class="calculator-button" onclick="appendToDisplay('3')">3</button>
+        <button class="calculator-button operator" onclick="appendToDisplay('/')">÷</button>
+
+        <!-- Row: pi, log, x^2, sqrt, 4,5,6, multiply -->
+        <button class="calculator-button" onclick="insertConstant('pi')">π</button>
+        <button class="calculator-button" onclick="applyUnary('log')">log</button>
+        <button class="calculator-button" onclick="applyUnary('sqr')">x²</button>
+        <button class="calculator-button" onclick="applyUnary('sqrt')">√</button>
+        <button class="calculator-button" onclick="appendToDisplay('4')">4</button>
+        <button class="calculator-button" onclick="appendToDisplay('5')">5</button>
+        <button class="calculator-button" onclick="appendToDisplay('6')">6</button>
+        <button class="calculator-button operator" onclick="appendToDisplay('*')">×</button>
+
+        <!-- Row: x^3, root, x^n, nthroot, 1,2,3, minus -->
+        <button class="calculator-button" onclick="applyUnary('cube')">x³</button>
+        <button class="calculator-button" onclick="applyUnary('cuberoot')">∛</button>
+        <button class="calculator-button" onclick="powerPrompt()">x^n</button>
+        <button class="calculator-button" onclick="nthRootPrompt()">√n</button>
+        <button class="calculator-button" onclick="appendToDisplay('7')">7</button>
+        <button class="calculator-button" onclick="appendToDisplay('8')">8</button>
+        <button class="calculator-button" onclick="appendToDisplay('9')">9</button>
+        <button class="calculator-button operator" onclick="appendToDisplay('-')">-</button>
+
+        <!-- Row: sin cos tan, 10^x, %, 0, ., plus -->
+        <button class="calculator-button" onclick="applyUnary('sin')">sin</button>
+        <button class="calculator-button" onclick="applyUnary('cos')">cos</button>
+        <button class="calculator-button" onclick="applyUnary('tan')">tan</button>
+        <button class="calculator-button" onclick="applyUnary('exp10')">10^x</button>
+        <button class="calculator-button" onclick="percent()">%</button>
+        <button class="calculator-button" onclick="appendToDisplay('0')">0</button>
+        <button class="calculator-button" onclick="appendToDisplay('.')">.</button>
+        <button class="calculator-button operator" onclick="appendToDisplay('+')">+</button>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<link rel="stylesheet" href="../static/css/style.css">
+<script src="../static/js/script.js"></script>
 <script>
-function showPowerInput() {
-    document.getElementById('powerInput').style.display = 'block';
-    setTimeout(() => calculateScientific('power'), 100);
+// Scientific calculator client-side logic
+let angleMode = 'Deg'; // or 'Rad'
+let lastAns = 0;
+
+function toggleAngleMode(){
+    angleMode = angleMode === 'Deg' ? 'Rad' : 'Deg';
+    document.getElementById('angleToggle').textContent = angleMode;
 }
 
-async function calculateScientific(operation) {
-    const value = document.getElementById('value').value;
-    const resultDiv = document.getElementById('result');
-    const errorDiv = document.getElementById('error');
-    const resultValue = document.getElementById('resultValue');
+function appendToDisplay(value){
+    const d = document.getElementById('display');
+    if (d.value === '0' && value !== '.') d.value = value;
+    else d.value += value;
+}
 
-    errorDiv.style.display = 'none';
-    resultDiv.style.display = 'none';
+function clearDisplay(){
+    document.getElementById('display').value = '0';
+}
 
-    if (!value) {
-        errorDiv.textContent = 'Please enter a value';
-        errorDiv.style.display = 'block';
-        return;
-    }
+function backspace(){
+    const d = document.getElementById('display');
+    if (d.value.length <= 1) d.value = '0';
+    else d.value = d.value.slice(0, -1);
+}
 
-    const requestData = {
-        value: parseFloat(value),
-        operation: operation
-    };
+function toggleAns(){
+    appendToDisplay(lastAns.toString());
+}
 
-    if (operation === 'power') {
-        const power = document.getElementById('power').value;
-        if (!power) {
-            errorDiv.textContent = 'Please enter a power value';
-            errorDiv.style.display = 'block';
-            return;
-        }
-        requestData.power = parseFloat(power);
-    }
+function insertConstant(name){
+    if (name === 'pi') appendToDisplay(Math.PI.toFixed(8));
+    if (name === 'e') appendToDisplay(Math.E.toFixed(8));
+}
 
-    try {
-        const response = await fetch('/api/calculate/scientific', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData)
-        });
+function percent(){
+    // Convert last number to percent
+    const d = document.getElementById('display');
+    d.value = d.value.replace(/(\d+\.?\d*)$/,(m)=> (parseFloat(m)/100).toString());
+}
 
-        const data = await response.json();
-
-        if (response.ok) {
-            resultValue.textContent = data.result;
-            resultDiv.style.display = 'block';
-        } else {
-            errorDiv.textContent = data.error;
-            errorDiv.style.display = 'block';
-        }
-    } catch (error) {
-        errorDiv.textContent = 'An error occurred. Please try again.';
-        errorDiv.style.display = 'block';
+function applyUnary(op){
+    const d = document.getElementById('display');
+    let x = parseFloat(d.value);
+    try{
+        let res = x;
+        if (op === 'sin') res = angleMode==='Deg' ? Math.sin(x * Math.PI/180) : Math.sin(x);
+        else if (op === 'cos') res = angleMode==='Deg' ? Math.cos(x * Math.PI/180) : Math.cos(x);
+        else if (op === 'tan') res = angleMode==='Deg' ? Math.tan(x * Math.PI/180) : Math.tan(x);
+        else if (op === 'sqrt') res = Math.sqrt(x);
+        else if (op === 'sqr') res = x * x;
+        else if (op === 'cube') res = Math.pow(x,3);
+        else if (op === 'cuberoot') res = Math.cbrt(x);
+        else if (op === 'log') res = Math.log10(x);
+        else if (op === 'exp10') res = Math.pow(10, x);
+        else res = x;
+        if (isNaN(res) || !isFinite(res)) throw new Error('Invalid result');
+        d.value = String(res);
+        lastAns = res;
+    } catch(e){
+        d.value = 'Error';
+        setTimeout(()=> d.value='0', 1200);
     }
 }
+
+function powerPrompt(){
+    const d = document.getElementById('display');
+    const base = parseFloat(d.value);
+    const p = prompt('Enter power (exponent):', '2');
+    if (p === null) return;
+    const res = Math.pow(base, parseFloat(p));
+    d.value = String(res);
+    lastAns = res;
+}
+
+function nthRootPrompt(){
+    const d = document.getElementById('display');
+    const val = parseFloat(d.value);
+    const n = prompt('Enter root degree (n):', '2');
+    if (n === null) return;
+    const res = Math.pow(val, 1/parseFloat(n));
+    d.value = String(res);
+    lastAns = res;
+}
+
+function calculate(){
+    const d = document.getElementById('display');
+    let expr = d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    // allow ^ as exponent by replacing ^ with **
+    expr = expr.replace(/\^/g,'**');
+    try{
+        // evaluate using Function
+        const result = Function('return ('+expr+')')();
+        d.value = String(result);
+        lastAns = result;
+    } catch(e){
+        d.value = 'Error';
+        setTimeout(()=> d.value='0', 1200);
+    }
+}
+
+// keyboard support (basic)
+document.addEventListener('keydown', (ev)=>{
+    const key = ev.key;
+    if (/^[0-9]$/.test(key) || ['+','-','*','/','.','(',')','%'].includes(key)){
+        ev.preventDefault(); appendToDisplay(key);
+    } else if (key === 'Enter') { ev.preventDefault(); calculate(); }
+    else if (key === 'Backspace'){ ev.preventDefault(); backspace(); }
+    else if (key === 'Escape'){ ev.preventDefault(); clearDisplay(); }
+});
 </script>
 {% endblock %}
