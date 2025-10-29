@@ -12,7 +12,7 @@ class CalculationHistory:
         self.timestamp = datetime.now()
 
 # Example model for future use if you want to store calculations:
-"""
+
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
@@ -27,4 +27,4 @@ class Calculation(db.Model):
 
     def __repr__(self):
         return f'<Calculation {self.expression} = {self.result}>'
-"""
+
