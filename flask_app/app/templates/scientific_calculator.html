@@ -125,6 +125,8 @@ function applyUnary(op){
         if (isNaN(res) || !isFinite(res)) throw new Error('Invalid result');
         d.value = String(res);
         lastAns = res;
+    // save to server history (single input)
+    sendSave(`${op}(${x})`, res, 'scientific', 1);
     } catch(e){
         d.value = 'Error';
         setTimeout(()=> d.value='0', 1200);
@@ -139,6 +141,7 @@ function powerPrompt(){
     const res = Math.pow(base, parseFloat(p));
     d.value = String(res);
     lastAns = res;
+    sendSave(`${base}^${p}`, res, 'scientific', 2);
 }
 
 function nthRootPrompt(){
@@ -149,6 +152,7 @@ function nthRootPrompt(){
     const res = Math.pow(val, 1/parseFloat(n));
     d.value = String(res);
     lastAns = res;
+    sendSave(`root(${n},${val})`, res, 'scientific', 2);
 }
 
 function calculate(){
@@ -161,9 +165,27 @@ function calculate(){
         const result = Function('return ('+expr+')')();
         d.value = String(result);
         lastAns = result;
+    // compute inputs count from numeric tokens in expression
+    const nums = (expr.match(/(\d+\.?\d*)/g) || []).length;
+    sendSave(expr, result, 'scientific', nums);
     } catch(e){
         d.value = 'Error';
         setTimeout(()=> d.value='0', 1200);
+    }
+}
+
+function sendSave(expression, result, type='scientific', inputs_count=null){
+    try{
+        if (inputs_count === null){
+            inputs_count = (String(expression).match(/(\d+\.?\d*)/g) || []).length;
+        }
+        fetch('/api/save', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ expression: expression, result: result, type: type, inputs_count: inputs_count })
+        });
+    }catch(e){
+        // ignore save errors
     }
 }
 

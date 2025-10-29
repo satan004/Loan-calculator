@@ -20,16 +20,19 @@
             display.value = result;
 
             // Send calculation to server for history (optional)
-            fetch('/calculate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    expression: display.value,
-                    result: result
-                })
-            });
+            try {
+                const exprStr = String(expression);
+                const nums = (exprStr.match(/(\d+\.?\d*)/g) || []).length;
+                fetch('/api/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ expression: expression, result: result, type: 'basic', inputs_count: nums })
+                });
+            } catch (e) {
+                // ignore save errors
+            }
 
         } catch (error) {
             display.value = 'Error';
@@ -60,3 +63,19 @@
             }
         }
     });
+
+    // helper for other pages to save client-side results
+    function sendSave(expression, result, type='client', inputs_count=null){
+        try{
+            if (inputs_count === null){
+                inputs_count = (String(expression).match(/(\d+\.?\d*)/g) || []).length;
+            }
+            fetch('/api/save', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ expression: expression, result: result, type: type, inputs_count: inputs_count })
+            });
+        }catch(e){
+            // ignore
+        }
+    }

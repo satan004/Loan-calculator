@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 import math
+from app import models
+from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
@@ -10,6 +12,13 @@ def index():
 @bp.route('/basic-calculator')
 def basic_calculator():
     return render_template('basic_calculator.html')
+
+
+@bp.route('/history')
+def history():
+    # show last 100 calculations
+    entries = models.Calculation.query.order_by(models.Calculation.timestamp.desc()).limit(100).all()
+    return render_template('history.html', entries=entries)
 
 @bp.route('/scientific-calculator')
 def scientific_calculator():
@@ -39,6 +48,22 @@ def calculate_basic():
                 return jsonify({'error': 'Cannot divide by zero'}), 400
             result = num1 / num2
         
+        # determine how many inputs were provided
+        inputs_count = 0
+        if 'num1' in data and str(data.get('num1')).strip() != '':
+            inputs_count += 1
+        if 'num2' in data and str(data.get('num2')).strip() != '':
+            inputs_count += 1
+
+        # save to database
+        try:
+            expr = f"{num1} {operation} {num2}"
+            calc = models.Calculation(expression=expr, result=float(result), calculation_type='basic', inputs_count=inputs_count, timestamp=datetime.utcnow())
+            models.db.session.add(calc)
+            models.db.session.commit()
+        except Exception:
+            models.db.session.rollback()
+
         return jsonify({'result': result})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -75,6 +100,20 @@ def calculate_scientific():
             power = float(data.get('power', 2))
             result = math.pow(value, power)
         
+        # determine inputs_count (1 for value, +1 if power provided)
+        inputs_count = 1
+        if operation == 'power' and 'power' in data and str(data.get('power')).strip() != '':
+            inputs_count = 2
+
+        # save to database
+        try:
+            expr = f"{operation}({value})"
+            calc = models.Calculation(expression=expr, result=float(result), calculation_type='scientific', inputs_count=inputs_count, timestamp=datetime.utcnow())
+            models.db.session.add(calc)
+            models.db.session.commit()
+        except Exception:
+            models.db.session.rollback()
+
         return jsonify({'result': result})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -104,6 +143,21 @@ def calculate_loan():
         total_payment = monthly_payment * months
         total_interest = total_payment - principal
         
+        # determine inputs_count for loan (principal, annual_rate, years)
+        inputs_count = 0
+        for k in ('principal', 'annual_rate', 'years'):
+            if k in data and str(data.get(k)).strip() != '':
+                inputs_count += 1
+
+        # save to database
+        try:
+            expr = f"loan P={principal}, r={annual_rate}, y={years}"
+            calc = models.Calculation(expression=expr, result=float(round(total_payment,2)), calculation_type='loan', inputs_count=inputs_count, timestamp=datetime.utcnow())
+            models.db.session.add(calc)
+            models.db.session.commit()
+        except Exception:
+            models.db.session.rollback()
+
         return jsonify({
             'monthly_payment': round(monthly_payment, 2),
             'total_payment': round(total_payment, 2),
@@ -111,4 +165,21 @@ def calculate_loan():
             'principal': round(principal, 2)
         })
     except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@bp.route('/api/save', methods=['POST'])
+def api_save():
+    try:
+        data = request.json or {}
+        expr = data.get('expression', '')
+        result = float(data.get('result', 0))
+        ctype = data.get('type', 'client')
+        inputs_count = int(data.get('inputs_count', 0)) if data.get('inputs_count') is not None else 0
+        calc = models.Calculation(expression=expr, result=result, calculation_type=ctype, inputs_count=inputs_count, timestamp=datetime.utcnow())
+        models.db.session.add(calc)
+        models.db.session.commit()
+        return jsonify({'status':'ok'})
+    except Exception as e:
+        models.db.session.rollback()
         return jsonify({'error': str(e)}), 400

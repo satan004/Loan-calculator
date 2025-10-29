@@ -23,6 +23,7 @@ class Calculation(db.Model):
     expression = db.Column(db.String(200), nullable=False)
     result = db.Column(db.Float, nullable=False)
     calculation_type = db.Column(db.String(50), nullable=False)  # 'basic', 'scientific', or 'loan'
+    inputs_count = db.Column(db.Integer, nullable=False, default=0)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
