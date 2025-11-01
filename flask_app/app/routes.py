@@ -183,3 +183,31 @@ def api_save():
     except Exception as e:
         models.db.session.rollback()
         return jsonify({'error': str(e)}), 400
+
+
+@bp.route('/api/delete', methods=['POST'])
+def api_delete():
+    try:
+        data = request.json or {}
+        _id = data.get('id')
+        if _id is None:
+            return jsonify({'error':'id required'}), 400
+        # allow numeric or string id
+        try:
+            cid = int(_id)
+        except Exception:
+            return jsonify({'error':'invalid id'}), 400
+
+        calc = models.Calculation.query.get(cid)
+        if not calc:
+            return jsonify({'error':'not found'}), 404
+
+        try:
+            models.db.session.delete(calc)
+            models.db.session.commit()
+            return jsonify({'status':'ok'})
+        except Exception as e:
+            models.db.session.rollback()
+            return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400

@@ -15,6 +15,7 @@
           <th>Type</th>
           <th>Expression</th>
           <th>Result</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -26,12 +27,50 @@
           <td>{{ e.calculation_type }}</td>
           <td>{{ e.expression }}</td>
           <td>{{ e.result }}</td>
+          <td>
+            <button class="btn btn-sm btn-danger delete-entry" data-id="{{ e.id }}" title="Delete">
+              <!-- simple trash SVG icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </td>
         </tr>
         {% else %}
-        <tr><td colspan="5">No history yet.</td></tr>
+        <tr><td colspan="7">No history yet.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function deleteEntry(id, btn){
+  if (!confirm('Delete this history entry?')) return;
+  fetch('/api/delete', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({id: id})
+  }).then(r => r.json()).then(j => {
+    if (j && j.status === 'ok'){
+      // remove the row
+      const tr = btn.closest('tr');
+      if (tr) tr.remove();
+    } else {
+      alert(j && j.error ? j.error : 'Delete failed');
+    }
+  }).catch(e => {
+    alert('Delete error: ' + e);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.delete-entry').forEach(btn => {
+    btn.addEventListener('click', function(ev){
+      const id = this.dataset.id;
+      deleteEntry(id, this);
+    });
+  });
+});
+</script>
 {% endblock %}
