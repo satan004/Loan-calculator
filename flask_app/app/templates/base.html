@@ -10,19 +10,19 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="/" class="sidebar-icon active" title="Home">
+        <a href="/" class="sidebar-icon {% if request.path == '/' %}active{% endif %}" title="Home">
             <i class="bi bi-house-fill"></i>
         </a>
-        <a href="/basic-calculator" class="sidebar-icon" title="Basic Calculator">
+        <a href="/basic-calculator" class="sidebar-icon {% if request.path.startswith('/basic-calculator') %}active{% endif %}" title="Basic Calculator">
             <i class="bi bi-calculator"></i>
         </a>
-        <a href="/scientific-calculator" class="sidebar-icon" title="Scientific Calculator">
+        <a href="/scientific-calculator" class="sidebar-icon {% if request.path.startswith('/scientific-calculator') %}active{% endif %}" title="Scientific Calculator">
             <i class="bi bi-mortarboard"></i>
         </a>
-        <a href="/loan-calculator" class="sidebar-icon" title="Loan Calculator">
+        <a href="/loan-calculator" class="sidebar-icon {% if request.path.startswith('/loan-calculator') %}active{% endif %}" title="Loan Calculator">
             <i class="bi bi-cash-coin"></i>
         </a>
-        <a href="/history" class="sidebar-icon" title="History">
+        <a href="/history" class="sidebar-icon {% if request.path.startswith('/history') %}active{% endif %}" title="History">
             <i class="bi bi-clock-history"></i>
         </a>
     </div>
