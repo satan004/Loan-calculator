@@ -3,7 +3,7 @@ Developer Guide — Loan Calculator
 
 This file explains the main functions, routes, models, and client-side helpers so a developer can quickly understand and extend the project.
 
-Project layout (short)
+Project layout 
 - run.py — small runner that builds the app with create_app() and starts it.
 - config.py — Flask config.
 - app/__init__.py — create_app() application factory, DB init and create_all.
@@ -11,13 +11,6 @@ Project layout (short)
 - app/routes.py — page routes and JSON API endpoints.
 - app/static/js/script.js — client-side helpers used by calculator pages.
 - app/templates/* — Jinja templates for UI.
-
-Important design notes
-- App uses factory pattern: `create_app()` in `app/__init__.py`.
-- Database: Flask-SQLAlchemy. Tables are created at startup using `db.create_all()` (suitable for small projects; consider Flask-Migrate for production).
-- Client-side evaluation: Basic and scientific calculators evaluate in browser using `eval`/`Function`. Keep that in mind for security.
-
-File-by-file function reference
 
 1) app/__init__.py
 ------------------
