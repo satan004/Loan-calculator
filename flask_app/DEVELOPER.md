@@ -1,11 +1,11 @@
-Developer Guide — Loan Calculator (file: DEVELOPER.md)
+Developer Guide — Loan Calculator
 =========================================================
 
-This document explains the main functions, routes, models, and client-side helpers so a developer can quickly understand and extend the project.
+This file explains the main functions, routes, models, and client-side helpers so a developer can quickly understand and extend the project.
 
 Project layout (short)
 - run.py — small runner that builds the app with create_app() and starts it.
-- config.py — Flask config (absolute SQLite path configured).
+- config.py — Flask config.
 - app/__init__.py — create_app() application factory, DB init and create_all.
 - app/models.py — SQLAlchemy `db` object and `Calculation` model.
 - app/routes.py — page routes and JSON API endpoints.
@@ -178,4 +178,3 @@ If you'd like, I can:
 - Add unit tests that exercise `/api/calculate/*` and `/api/save` and `/api/delete`.
 - Migrate client eval to server-side calculations and wire the templates to call the server endpoints instead of evaluating in-browser.
 
--- End of developer guide
