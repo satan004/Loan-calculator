@@ -114,4 +114,4 @@ If you want me to:
 - Run the app and capture the startup logs, I can do that and paste the tracebacks here.
 - Replace client eval with server-side computation (I'll implement `POST /api/calculate/scientific` backing the client UI), say so and I'll implement it.
 
--- End of README
+
