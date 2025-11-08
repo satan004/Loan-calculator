@@ -1,8 +1,4 @@
 
-Below are suggested pytest test templates. Put tests under `tests/` and run `pytest` after installing pytest.
-
-Example: basic_api_test.py
-
 ```python
 import json
 import pytest
@@ -52,3 +48,10 @@ def test_delete(client, app):
     with app.app_context():
         assert models.Calculation.query.get(rid) is None
 ```
+
+
+| **Timestamp** | **Input** | **Type** | **Actual Output** | **Result** |
+|------------------|-----------------|------------|----------------------|-------------------|------------------------|
+| TC01 | a = 2, b = 3 | 5 | 5 | ✅ Pass |
+| TC02 | a = -1, b = 4 | 3 | 3 | ✅ Pass |
+| TC03 | a = 0, b = 0 | 0 | 0 | ✅ Pass |
